@@ -91,6 +91,7 @@ class _LogInPageState extends State<LogInPage> {
             }
           }
         }).catchError((error) {
+          print(error);
           if (mounted) {
             setState(() {
               isUserLoading = false;

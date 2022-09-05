@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:prabhu_movie_recommendation_system/screens/auth/login.dart';
+import 'package:prabhu_movie_recommendation_system/screens/widgets/history.dart';
 
 import '../../../service/auths_service.dart';
 import '../../../service/common.dart';
@@ -189,6 +190,41 @@ class _AccountState extends State<Account> {
                         )
                       ],
                     ),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 40,
+              margin: const EdgeInsets.only(bottom: 15, left: 10, right: 10),
+              child: MaterialButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HistoryPage(),
+                  ),
+                ),
+                color: white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  // height: 40,
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(15.0))),
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 8),
+
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('History', style: textpoppinsmediummdd()),
+                      const Icon(
+                        Icons.keyboard_arrow_right,
+                        size: 25,
+                        color: primary,
+                      )
+                    ],
                   ),
                 ),
               ),

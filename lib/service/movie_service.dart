@@ -112,4 +112,46 @@ class MovieService {
 
     return ResponseModel(response.statusCode, json.decode(response.body));
   }
+
+  static Future<ResponseModel> getLikedMovies({int count = 10}) async {
+    String? token = '';
+    await Common.getToken().then((onValue) => token = onValue);
+    final response = await client.get(
+      Uri.parse(Constants.baseURL + "/movies/liked"),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'bearer $token',
+      },
+    );
+
+    var body = json.decode(response.body);
+    late Map<String, dynamic> data;
+    if (body is List) {
+      data = {'results': body};
+    } else {
+      data = body;
+    }
+    return ResponseModel(response.statusCode, data);
+  }
+
+  static Future<ResponseModel> getDisLikedMovies({int count = 10}) async {
+    String? token = '';
+    await Common.getToken().then((onValue) => token = onValue);
+    final response = await client.get(
+      Uri.parse(Constants.baseURL + "/movies/disiked"),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'bearer $token',
+      },
+    );
+
+    var body = json.decode(response.body);
+    late Map<String, dynamic> data;
+    if (body is List) {
+      data = {'results': body};
+    } else {
+      data = body;
+    }
+    return ResponseModel(response.statusCode, data);
+  }
 }

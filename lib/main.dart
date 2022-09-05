@@ -18,7 +18,7 @@ void main() async {
       home: await checkIsLogin() ? const Home() : const LogInPage(),
       debugShowCheckedModeBanner: false,
     ),
-  ));
+  ),);
 }
 
 checkIsLogin() => Common.getToken().then((value) {

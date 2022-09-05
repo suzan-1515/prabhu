@@ -8,61 +8,55 @@ import 'package:getwidget/components/card/gf_card.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:getwidget/position/gf_position.dart';
 import 'package:getwidget/size/gf_size.dart';
+import 'package:prabhu_movie_recommendation_system/screens/widgets/common_widgets.dart';
 import 'package:prabhu_movie_recommendation_system/utils/imageUtils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../service/movie_service.dart';
 import '../../../style/style.dart';
 import '../../../utils/view_utils.dart';
-import '../../widgets/common_widgets.dart';
-import '../../widgets/custom_app_bar.dart';
 
-class MovieRecommendationListPage extends StatefulWidget {
-  const MovieRecommendationListPage({Key? key}) : super(key: key);
+class LikedHistoryView extends StatefulWidget {
+  const LikedHistoryView({Key? key}) : super(key: key);
 
   @override
-  _MovieRecommendationListPageState createState() =>
-      _MovieRecommendationListPageState();
+  _LikedHistoryViewState createState() => _LikedHistoryViewState();
 }
 
-class _MovieRecommendationListPageState
-    extends State<MovieRecommendationListPage> {
+class _LikedHistoryViewState extends State<LikedHistoryView> {
   bool isLoading = false;
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List moviesList = List.empty(growable: true);
 
   @override
   void initState() {
-    getRecommendationList();
+    getLikedMoviesList();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: bg,
-      appBar: customAppBar(context, title: 'Recommendations'),
-      body: _buildBody(context),
-    );
+    return _buildBody(context);
   }
 
-  void getRecommendationList() {
+  void getLikedMoviesList() {
     if (mounted) {
       setState(() {
         isLoading = true;
       });
     }
-    MovieService.getRecommendation().then((value) {
+    MovieService.getLikedMovies().then((value) {
       if (mounted) {
         setState(() {
           isLoading = false;
-          if (value.data['results'] != null) {
-            moviesList.addAll(value.data['results'].reversed);
+          if (value.statusCode == 200) {
+            if (value.data['results'] != null) {
+              moviesList.addAll(value.data['results'].reversed);
+            } else {
+              ViewUtils.showSnackBarWithContext("Data Not Found.", context);
+            }
           } else {
-            ViewUtils.showSnackBar("Movies Not Found.", _scaffoldKey);
+            ViewUtils.showSnackBarWithContext(value.data['message'], context);
           }
         });
       }
@@ -71,7 +65,7 @@ class _MovieRecommendationListPageState
         setState(() {
           isLoading = false;
         });
-        ViewUtils.showSnackBar("Movies Not Found.", _scaffoldKey);
+        ViewUtils.showSnackBarWithContext("Data Not Found.", context);
       }
     });
   }
@@ -81,7 +75,7 @@ class _MovieRecommendationListPageState
         ? customLoader()
         : (moviesList.isNotEmpty)
             ? buildMovieListView()
-            : const NoData(text: "No Recommendations");
+            : const NoData(text: "No Data.");
   }
 
   buildMovieListView() => ListView.builder(
@@ -119,10 +113,6 @@ class _MovieRecommendationListPageState
                   color: Colors.lightGreen,
                 ),
               ),
-            ),
-            content: Text(
-              '${movie['overview']}',
-              style: textpoppinsRegularsm(),
             ),
             buttonBar: GFButtonBar(
               children: <Widget>[
